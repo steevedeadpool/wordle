@@ -7,6 +7,7 @@ const input6 = document.getElementsByClassName('input6')
 const btn = document.getElementById('guess');
 const h1word = document.getElementById('word'); 
 let current_line = 0
+const target_word = fetch("https://wordle.belousov.one/api/v2/daily/?lang=ru")
 const inputs_array = [Array.from(input), Array.from(input2), Array.from(input3), Array.from(input4), Array.from(input5), Array.from(input6)]
 for (let i = 1; i < 6; i++) {
     inputs_array[i].forEach(element => {element.setAttribute('disabled', true);});

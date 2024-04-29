@@ -4,11 +4,10 @@ let tile_number = 0
 let row_number = 0
 let current_row = 0
 let is_last = false
+let today_word;
 const word = document.getElementById('word');
 const test = document.getElementById('test');
 document.addEventListener('keydown', main)
-
-
 function main(event) {
     let letter = event.key.toLowerCase()
     setCurrentTile()
@@ -35,8 +34,9 @@ function main(event) {
             compleate_row()
             row_number +=1  
             tile_number += 1
-            console.log(row_number)
-            word.innerHTML = get_word()
+            if (get_word() == today_word) {
+                alert("Вы победили!")
+            }
         } else {
             console.log('Не последняя строка')
         }
@@ -63,9 +63,15 @@ function delete_letter() {
 }
 
 
-function to_next_row() {
-
+async function get_today_word() {
+    let response = await fetch("https://wordle.belousov.one/api/v2/daily/?lang=ru")
+    let json = await response.json()
+    today_word = json.data.word
+    console.log(today_word)
+    
 }
+
+
 function get_word() {
     let word = ''
     word += tiles[tile_number-5].innerHTML
@@ -93,3 +99,6 @@ function win() {
         return
     }
 }
+    
+
+get_today_word()
