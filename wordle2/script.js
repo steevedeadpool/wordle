@@ -1,9 +1,11 @@
+import { isCharInWord } from "./wordp.mjs"
+
+
 const tiles = Array.from(document.getElementsByClassName('tile'))
 let current_tile
+let tdaywordarr = []
 let tile_number = 0
 let row_number = 0
-let current_row = 0
-let is_last = false
 let today_word;
 const word = document.getElementById('word');
 const test = document.getElementById('test');
@@ -30,7 +32,7 @@ function main(event) {
         }
     } else if(letter == 'enter') {
         win()
-        if (current_tile.getAttribute('data-last') == 'true') { 
+        if (current_tile.getAttribute('data-last') == 'true') {
             compleate_row()
             row_number +=1  
             tile_number += 1
@@ -63,37 +65,49 @@ function delete_letter() {
 }
 
 
-async function get_today_word() {
+async function getTodayWord() {
     let response = await fetch("https://wordle.belousov.one/api/v2/daily/?lang=ru")
     let json = await response.json()
     today_word = json.data.word
+    tdaywordarr = today_word.split('').reverse()
     console.log(today_word)
-    
+    console.log(tdaywordarr)
 }
 
 
 function get_word() {
     let word = ''
-    word += tiles[tile_number-5].innerHTML
-    word += tiles[tile_number-4].innerHTML
-    word += tiles[tile_number-3].innerHTML
-    word += tiles[tile_number-2].innerHTML
-    word += tiles[tile_number-1].innerHTML
+    for (let i = tile_number-5; i < tile_number; i++){  
+        let curTile = tiles[i].innerHTML;
+        word += curTile
+    }
     return word
 }
 
 
 function compleate_row() {
-    tiles[tile_number].style.color = 'red'
-    tiles[tile_number-1].style.color = 'red'
-    tiles[tile_number-2].style.color = 'red'
-    tiles[tile_number-3].style.color = 'red'
-    tiles[tile_number-4].style.color = 'red'
+    let b = 0;
+    for (let i = tile_number; i > tile_number-5; i--) {
+        if(isCharInWord(tiles[i].innerHTML, today_word) == true) {
+            if (tiles[i].innerHTML == tdaywordarr[b]) {
+                tiles[i].style.backgroundColor = 'green';
+                tiles[i].style.color = 'white';
+            }else {
+                console.log(tdaywordarr[b])
+                tiles[i].style.backgroundColor = 'orange';
+                tiles[i].style.color = 'white';
+            }
+        } else {
+            tiles[i].style.backgroundColor = 'red';
+            tiles[i].style.color = 'white';
+        }
+        b += 1
+    }
 }
 
 function win() {
     if (row_number == 5) {
-        alert('конец игры')
+            
         document.removeEventListener('keydown', main)
     } else {
         return
@@ -101,4 +115,4 @@ function win() {
 }
     
 
-get_today_word()
+getTodayWord()
