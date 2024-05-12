@@ -48,6 +48,40 @@ function main(event) {
     }
 }
 
+function changTheme() {
+    if (localStorage.getItem("theme") == "dark") {
+        document.body.classList.add("changeTheme")
+        changetilecolors(true)
+    }
+}
+
+function changetilecolors(isdark) {
+    if (isdark == true) {
+        tiles.forEach(element => {
+            element.classList.add("dark")
+        });
+    } else {
+        tiles.forEach(element => {
+            element.classList.remove("dark")
+        });
+    }
+}
+
+document.getElementById('theme-btn').onclick = () => {
+    if (localStorage.getItem("theme") == "light") {
+        localStorage.setItem("theme", "dark")
+        changetilecolors(true)
+        document.body.classList.add("changeTheme")
+    } else {
+        localStorage.setItem("theme", "light")
+        changetilecolors(false)
+        document.body.classList.remove("changeTheme")
+    }
+}
+    
+
+
+
 
 function setCurrentTile() {
     if (tiles[tile_number] != undefined) {
@@ -116,3 +150,4 @@ function win() {
     
 
 getTodayWord()
+changTheme()
