@@ -1,14 +1,14 @@
-import { isCharInWord } from "./wordp.mjs"
+import { isCharInWord } from "./scripts/wordp.mjs"
+import "./scripts/bootstrap.min.js"
 
 
 const tiles = Array.from(document.getElementsByClassName('tile'))
+const myModal = new bootstrap.Modal(document.getElementById('myModal'))
 let current_tile
 let tdaywordarr = []
 let tile_number = 0
 let row_number = 0
 let today_word;
-const word = document.getElementById('word');
-const test = document.getElementById('test');
 document.addEventListener('keydown', main)
 function main(event) {
     let letter = event.key.toLowerCase()
@@ -37,7 +37,8 @@ function main(event) {
             row_number +=1  
             tile_number += 1
             if (get_word() == today_word) {
-                alert("Вы победили!")
+                shwmdl("Вы победили")
+                document.removeEventListener('keydown', main)
             }
         } else {
             console.log('Не последняя строка')
@@ -48,19 +49,15 @@ function main(event) {
     }
 }
 
-function changTheme() {
-    if (localStorage.getItem("theme") == "dark") {
-        document.body.classList.add("changeTheme")
-        changetilecolors(true)
-    }
-}
-
 function changetilecolors(isdark) {
+    document.getElementById('mdw1').classList.add('dark');
     if (isdark == true) {
         tiles.forEach(element => {
             element.classList.add("dark")
         });
+
     } else {
+        document.getElementById('mdw1').classList.remove('dark');
         tiles.forEach(element => {
             element.classList.remove("dark")
         });
@@ -79,8 +76,21 @@ document.getElementById('theme-btn').onclick = () => {
     }
 }
     
+document.getElementById('theme-btn').onkeydown = function(event) {
+    if(event.keyCode == 13) {
+        event.preventDefault();
+        return false;
+    }
+}
 
 
+
+
+ async function shwmdl(txt) {
+    await myModal.show(myModal)
+    document.getElementById('exampleModalLabel').innerHTML = txt
+    document.getElementById('wrd').innerHTML = `Словом было "${today_word}"`
+}
 
 
 function setCurrentTile() {
@@ -141,7 +151,7 @@ function compleate_row() {
 
 function win() {
     if (row_number == 5) {
-            
+        shwmdl("Вы проиграли")
         document.removeEventListener('keydown', main)
     } else {
         return
