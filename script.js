@@ -150,10 +150,11 @@ function compleate_row() {
 }
 
 function win() {
-    if (row_number == 5) {
+    if (row_number == 5 && tile_number == 29) {
         shwmdl("Вы проиграли")
         document.removeEventListener('keydown', main)
     } else {
+        console.log(tile_number)
         return
     }
 }
